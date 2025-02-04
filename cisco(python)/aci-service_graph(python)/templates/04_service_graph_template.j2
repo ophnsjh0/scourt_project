@@ -1,0 +1,165 @@
+{
+    "vnsAbsGraph": {
+        "attributes": {
+            "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}",
+            "name": "{{SERVICE_GRAPH_TEMPLATE}}",
+            "status": "created,modified",
+            "filterBetweenNodes": "{{FILTER_AFTER_FIRST_NODE}}",
+            "rn": "AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}"
+        },
+        "children": [
+            {
+                "vnsAbsConnection": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsConnection-C1",
+                        "name": "C1",
+                        "status": "created,modified",
+                        "rn": "AbsConnection-C1"
+                    },
+                    "children": [
+                        {
+                            "vnsRsAbsConnectionConns": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsTermNodeCon-T1/AbsTConn",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        },
+                        {
+                            "vnsRsAbsConnectionConns": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsNode-N1/AbsFConn-consumer",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "vnsAbsConnection": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsConnection-C2",
+                        "name": "C2",
+                        "status": "created,modified",
+                        "rn": "AbsConnection-C2"
+                    },
+                    "children": [
+                        {
+                            "vnsRsAbsConnectionConns": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsNode-N1/AbsFConn-provider",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        },
+                        {
+                            "vnsRsAbsConnectionConns": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsTermNodeProv-T2/AbsTConn",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "vnsAbsNode": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsNode-N1",
+                        "name": "N1",
+                        "managed": "false",
+                        "funcTemplateType": "ADC_ONE_ARM",
+                        "status": "created,modified",
+                        "routingMode": "unspecified",
+                        "rn": "AbsNode-N1"
+                    },
+                    "children": [
+                        {
+                            "vnsAbsFuncConn": {
+                                "attributes": {
+                                    "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsNode-N1/AbsFConn-consumer",
+                                    "name": "consumer",
+                                    "status": "created,modified",
+                                    "rn": "AbsFConn-consumer"
+                                },
+                                "children": []
+                            }
+                        },
+                        {
+                            "vnsAbsFuncConn": {
+                                "attributes": {
+                                    "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsNode-N1/AbsFConn-provider",
+                                    "name": "provider",
+                                    "status": "created,modified",
+                                    "rn": "AbsFConn-provider"
+                                },
+                                "children": []
+                            }
+                        },
+                        {
+                            "vnsRsNodeToLDev": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/lDevVip-BIGIP-VE-One-Standalone",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "vnsAbsTermNodeCon": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsTermNodeCon-T1",
+                        "name": "T1",
+                        "status": "created,modified",
+                        "rn": "AbsTermNodeCon-T1"
+                    },
+                    "children": [
+                        {
+                            "vnsAbsTermConn": {
+                                "attributes": {
+                                    "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsTermNodeCon-T1/AbsTConn",
+                                    "name": "1",
+                                    "status": "created,modified",
+                                    "rn": "AbsTConn"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "vnsAbsTermNodeProv": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsTermNodeProv-T2",
+                        "name": "T2",
+                        "status": "created,modified",
+                        "rn": "AbsTermNodeProv-T2"
+                    },
+                    "children": [
+                        {
+                            "vnsAbsTermConn": {
+                                "attributes": {
+                                    "dn": "uni/tn-{{TENANT}}/AbsGraph-{{SERVICE_GRAPH_TEMPLATE}}/AbsTermNodeProv-T2/AbsTConn",
+                                    "name": "1",
+                                    "status": "created,modified",
+                                    "rn": "AbsTConn"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

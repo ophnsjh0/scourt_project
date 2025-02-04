@@ -1,0 +1,34 @@
+{
+    "vzBrCP": {
+        "attributes": {
+            "dn": "uni/tn-{{TENANT}}/brc-{{CONTRACT}}",
+            "name": "{{CONTRACT}}",
+            "rn": "brc-{{CONTRACT}}",
+            "status": "created,modified"
+        },
+        "children": [
+            {
+                "vzSubj": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/brc-{{CONTRACT}}/subj-{{SUBJECT}}",
+                        "name": "{{SUBJECT}}",
+                        "rn": "subj-{{SUBJECT}}",
+                        "status": "created,modified"
+                    },
+                    "children": [
+                        {
+                            "vzRsSubjFiltAtt": {
+                                "attributes": {
+                                    "status": "created,modified",
+                                    "tnVzFilterName": "{{FILTER}}",
+                                    "directives": ""
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

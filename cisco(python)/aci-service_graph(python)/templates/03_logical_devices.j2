@@ -1,0 +1,65 @@
+{
+    "vnsLDevVip": {
+        "attributes": {
+            "dn": "uni/tn-{{TENANT}}/lDevVip-{{L4_L7_DEVICES}}",
+            "svcType": "ADC",
+            "managed": "false",
+            "devtype": "VIRTUAL",
+            "contextAware": "single-Context",
+            "funcType": "GoTo",
+            "status": "created,modified"
+        },
+        "children": [
+            {
+                "vnsCDev": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/lDevVip-{{L4_L7_DEVICES}}/cDev-Device1",
+                        "vcenterName": "{{VCENTER_NAME}}",
+                        "vmName": "{{VM_NAME}}",
+                        "status": "created,modified"
+                    },
+                    "children": [
+                        {
+                            "vnsCIf": {
+                                "attributes": {
+                                    "dn": "uni/tn-{{TENANT}}/lDevVip-{{L4_L7_DEVICES}}/cDev-Device1/cIf-[{{VM_NIC}}]",
+                                    "vnicName": "{{VM_NIC}}",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "vnsLIf": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/lDevVip-{{L4_L7_DEVICES}}/lIf-{{CLUSTER_INTERFACE_NAME}}",
+                        "status": "created,modified"
+                    },
+                    "children": [
+                        {
+                            "vnsRsCIfAttN": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/lDevVip-{{L4_L7_DEVICES}}/cDev-Device1/cIf-[{{VM_NIC}}]",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "vnsRsALDevToDomP": {
+                    "attributes": {
+                        "tDn": "uni/vmmp-VMware/dom-{{VMM_DOMAIN}}",
+                        "status": "created,modified"
+                    },
+                    "children": []
+                }
+            }
+        ]
+    }
+}

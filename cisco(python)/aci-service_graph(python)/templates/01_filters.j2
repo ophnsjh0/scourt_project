@@ -1,0 +1,45 @@
+{
+    "vzFilter": {
+        "attributes": {
+            "dn": "uni/tn-{{TENANT}}/flt-{{FILTER}}",
+            "name": "{{FILTER}}",
+            "rn": "flt-{{FILTER}}",
+            "status": "created,modified"
+        },
+        "children": [
+            {
+                "vzEntry": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/flt-{{FILTER}}/e-{{ENTRY}}",
+                        "name": "{{ENTRY}}",
+                        
+                        {% if ETHER_TYPE != 'unspecified' %}
+                        "etherT": "{{ETHER_TYPE}}",
+                        {% endif %}
+                        {% if IP_PROTOCOL != 'unspecified' %}
+                        "prot": "{{IP_PROTOCOL}}",
+                        {% endif %}
+
+                        {% if SRC_FROM_PORT != 'unspecified' %}
+                        "sFromPort": "{{SRC_FROM_PORT}}",
+                        {% endif %}
+                        {% if SRC_FROM_PORT != 'unspecified' and SRC_TO_PORT != 'unspecified' %}
+                        "sToPort": "{{SRC_TO_PORT}}",
+                        {% endif %}
+
+                        {% if DST_FROM_PORT != 'unspecified' %}
+                        "dFromPort": "{{DST_FROM_PORT}}",
+                        {% endif %}
+                        {% if DST_FROM_PORT != 'unspecified' and DST_TO_PORT != 'unspecified' %}
+                        "dToPort": "{{DST_TO_PORT}}",
+                        {% endif %}
+                        
+                        "rn": "e-{{ENTRY}}",
+                        "status": "created,modified"
+                    },
+                    "children": []
+                }
+            }
+        ]
+    }
+}

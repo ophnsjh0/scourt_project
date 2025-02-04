@@ -1,0 +1,65 @@
+{
+    "fvTenant": {
+        "attributes": {
+            "dn": "uni/tn-{{TENANT}}",
+            "status": "modified"
+        },
+        "children": [
+            {
+                "fvTrackMember": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/trackmember-{{TRACK_MEMBER}}",
+                        "name": "{{TRACK_MEMBER}}",
+                        "dstIpAddr": "{{ DST_IP_TO_BE_TRACKED }}",
+                        "scopeDn": "uni/tn-{{TENANT}}/BD-{{BD}}",
+                        "rn": "trackmember-{{TRACK_MEMBER}}",
+                        "status": "created,modified"
+                    },
+                    "children": [
+                        {
+                            "fvRsIpslaMonPol": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/ipslaMonitoringPol-{{IP_SLA_MON_POL}}",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "fvIPSLAMonitoringPol": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/ipslaMonitoringPol-{{IP_SLA_MON_POL}}",
+                        "name": "{{IP_SLA_MON_POL}}",
+                        "rn": "ipslaMonitoringPol-{{IP_SLA_MON_POL}}",
+                        "status": "created,modified"
+                    },
+                    "children": []
+                }
+            },
+            {
+                "fvTrackList": {
+                    "attributes": {
+                        "dn": "uni/tn-{{TENANT}}/tracklist-{{TRACK_LIST}}",
+                        "name": "{{TRACK_LIST}}",
+                        "rn": "tracklist-{{TRACK_LIST}}",
+                        "status": "created,modified"
+                    },
+                    "children": [
+                        {
+                            "fvRsOtmListMember": {
+                                "attributes": {
+                                    "tDn": "uni/tn-{{TENANT}}/trackmember-{{TRACK_MEMBER}}",
+                                    "status": "created,modified"
+                                },
+                                "children": []
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
