@@ -72,7 +72,8 @@ def get_crc_check_cisco(name, host, username, password, command, retries=3, dela
             ssh.close()
             logging.info(f"[{host}] 명령어 실행 완료")
             
-            retrun {'name': name, 'host': host, 'output': buffer, 'error': None}
+            return {'name': name, 'host': host, 'output': buffer, 'error': None}
+            
         except paramiko.AuthenticationException:
             logging.error(f"[{host}] 인증 실패")
             return {'host': host, 'output': None, 'error': "Authentication failed"}
@@ -197,8 +198,8 @@ def main():
             excutor.submit(get_crc_check_cisco, device['name'], device['ip'], device['id'], device['password'], command): device for device in devices
         }
         
-        for Future in as_complete(future_to_device):
-            device = future_to_device[Future]
+        for future in as_complete(future_to_device):
+            device = future_to_device[future]
             try:
                 result = future.result()
                 results.append(result)
