@@ -1,5 +1,5 @@
 import paramiko
-from concurrent.futures import ThreadPoolExecutor, as_complete
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from cryptography.fernet import Fernet
 from prettytable import PrettyTable
 import time
@@ -195,10 +195,11 @@ def main():
     
     with ThreadPoolExecutor(max_workers=max_workers) as excutor:
         future_to_device = {
-            excutor.submit(get_crc_check_cisco, device['name'], device['ip'], device['id'], device['password'], command): device for device in devices
+            excutor.submit(get_crc_check_cisco, device['name'], device['ip'], device['id'], device['password'], command): device 
+            for device in devices
         }
         
-        for future in as_complete(future_to_device):
+        for future in as_completed(future_to_device):
             device = future_to_device[future]
             try:
                 result = future.result()
