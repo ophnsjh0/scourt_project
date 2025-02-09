@@ -18,5 +18,6 @@ def load_and_decrypt_data(filename):
 
     return data_list
 
+
 decrypted_info = load_and_decrypt_data("encrypted_list.bin")
 print(f"Decrypted Info: {decrypted_info}")

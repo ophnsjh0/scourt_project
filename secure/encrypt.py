@@ -5,14 +5,16 @@ import json
 def load_key():
     return open("secret.key", "rb").read()
 
+
 def encrypt_and_save_data(data_list, filename):
     key = load_key()
     fernet = Fernet(key)
     data_json = json.dumps(data_list)
     encrypted_data = fernet.encrypt(data_json.encode())
-    
+
     with open(filename, "wb") as file:
         file.write(encrypted_data)
+
 
 account_info = [
     {"name": "BD-APIC", "ip": "10.10.10.10", "id": "admin", "password": "password"},
