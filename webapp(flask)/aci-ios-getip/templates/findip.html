@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device=width, initial-scale=1.0">
+    <title>IP Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css')}}">
+</head>
+<body>
+    <header>
+        <h1>{{subnet}} IP Info</h1>
+    </header>
+    <main>
+        <div class="container">
+            <nav class="menu-bar">
+                <ul>
+                        <form action="/export" method="POST">
+                            <input type="hidden" name="data" value="{{datas}}">
+                            <button type="summit">export</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+            <from id='data' action="/" method="get">
+                <div class="search-bar">
+                    <select name="center" id="searchInput">
+                        <option value="BD-APIC" {{ 'selected' if center == 'BD-APIC' else ''}}>분당 Network</option>
+                        <option value="SJ-APIC" {{ 'selected' if center == 'SJ-APIC' else ''}}>세종 Network</option>
+                    </select>
+                    <button type='submit'>Search</button>
+                </div>
+            </form>
+            <div class="network-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>VRF</th>
+                            <th>Network</th>
+                            <th>IP</th>
+                            <th>MAC</th>
+                            <th>Node</th>
+                            <th>Interface</th>
+                            <th>Host</th>
+                            <th>Connect</th>
+                        </tr>
+                    </thead>
+                        {% for data in datas %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{data.vrf}}</td>
+                            {% if data.bd == "" %}
+                                <td>Serial Net</td>
+                            {% endif %}
+                            <td>{{data.addr}}</td>
+                            <td>{{data.mac}}</td>
+                            <td>{{data.node}}</td>
+                            <td>{{data.physIf}}</td>
+                            {% if data.host == "" %}
+                                <td>{{data.desc}}</td>
+                            {% else %}
+                                <td>{{data.host}}</td>
+                            {% endif %}
+                            {% if data.pcIf != "" %}
+                                <td>{{data.pcIf}}</td>
+                            {% elif data.connect != "" %}
+                                <td>{{data.connect}}</td>
+                            {% else %}
+                                <td>Single Server</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    <tbody id="ipTableBody">
+                        <!-- IP Entries will go here-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 IP Management System</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+

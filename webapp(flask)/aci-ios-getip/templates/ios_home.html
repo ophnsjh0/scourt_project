@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device=width, initial-scale=1.0">
+    <title>IP Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css')}}">
+</head>
+<body>
+    <header>
+        <h1>IP Management</h1>
+    </header>
+    <main>
+        <div class="container">
+            <from id='data' action="/" method="get">
+                <nav class="navbar">
+                    <ul class="menu">
+                        <li class="menu-item dropdown">
+                            <a href="#">SDN</a>
+                            <ul class="submenu">
+                                <li><a href={{ url_for('home', center='BD-APIC')}}BD-APIC</a></li>
+                                <li><a href={{ url_for('home', center='SJ-APIC')}}SJ-APIC</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item dropdown">
+                            <a href="#">MGMT</a>
+                            <ul class="submenu">
+                                <li><a href={{ url_for('home', center='BD-MGMT')}}BD-MGMT</a></li>
+                                <li><a href={{ url_for('home', center='SJ-MGMT')}}SJ-MGMT</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </form>
+            <div class="network-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>Network</th>
+                            <th>VLAN</th>
+                            <th>Subnet</th>
+                        </tr>
+                    </thead>
+                        <tr>
+                            <td>0</td>
+                            <td>
+                                <a href="{{ url_for('findip', center=center, serial = 'serial')}}">ALL Network</a>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('findip', center=center, serial = 'serial')}}">ALL Network</a>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('findip', center=center, serial = 'serial')}}">ALL Network</a>
+                            </td>
+                        </tr>
+                        {% for bd in bd_info %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                <a href="{{ url_for('findip', center=center, bd = bd.vlan, network = bd.network_name)}}">{{bd.network_name}}</a>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('findip', center=center, bd = bd.vlan, network = bd.network_name)}}">{{bd.vlan}}</a>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('findip', center=center, bd = bd.vlan, network = bd.network_name)}}">{{bd.network}}</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    <tbody id="ipTableBody">
+                        <!-- IP Entries will go here-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 IP Management System</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
