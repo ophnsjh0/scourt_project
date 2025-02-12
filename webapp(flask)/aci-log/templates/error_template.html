@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fault Code Checker</title>
+</head>
+<body>
+    <h1>Fault Code Checker</h1>
+    <form method='post'>
+        <label for='code'>Enter Fault Code</label>
+        <input type='text' id='code' name='code'>
+        <button type='summit'>Check</button>
+    </form>
+    {% if error_message %}
+        <p style="color: red;">Error: {{ error_message }}</p>
+    {% elif result %}
+        <p style="color: green;">Code {{ code }} is valid.</p>
+    {% endif %}
+</body>
+ 

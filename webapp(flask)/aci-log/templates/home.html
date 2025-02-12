@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/pico.min.css')}}"
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'custom.css')}}"
+    <title>ACI LOG Search</title>
+    <style>
+        body {
+            font-family : Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+            verical-align: middle;
+            font-size: 13px;
+            color: #F7D358;
+        }
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            font-size: 12px;
+        }
+        button {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+            verical-align: middle;
+            font-size: 14px;
+        }
+        #calendarModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #424949;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        #selectedDateTime {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cusor: pointer;
+        }
+        nav {
+            display:flex;
+            justify-content: center;
+            padding: 8px;
+            font-size: 12px;
+            size: 10px;
+        }
+        .page_size {
+            display : flex;
+            justify-content: end;
+            padding : 10px;
+            border : 0px solid black;
+        }
+        select {
+            height: 55px;
+            padding: 0px;
+            font-size: 12px;
+        }
+        input {
+            padding: 0px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h3>ACI LOG Search</h3>
+            <figure>
+                <form id='data' action="/searchlog" method="get">
+                    <table role="grid">
+                        <tr>
+                            <th scope="col">Create</th>
+                            <th scope="col">센터선택</th>
+                            <th scope="col">Log센터</th>
+                            <th scope="col" colspan="2">Code</th>
+                            <th scope="col">Serverity</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button type="button" onclick="openCalendar()" style="font-size: 12px">시간 선택</button>
+                                <div id="selecteDateTime" style="font-size: 12px">선택된 날짜와 시간: 없음</div>
+                                <div id="calendarModal">
+                                    <div class="modal-content">
+                                        <div style="color: white"> 시작선택
+                                            <input type="date" id="startDatePicker" name="startdate">
+                                            <input type="time" id="startTimePicker" name="starttime">
+                                        </div>
+                                        <div style="color: white"> 종료선택
+                                            <input type="date" id="endDatePicker" name="enddate">
+                                            <input type="time" id="endTimePicker" name="endtime">
+                                        </div>
+                                        <button type="button" id="confirmButton" onclick="selectDateTime()">확인</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <select name="center">
+                                    <option value="bundang">Bundang</option>
+                                    <option value="sejong">Sejong</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="selectlog">
+                                    <option value="faultRecord">Fault_Log</option>
+                                    <option value="eventRecord">Event_Log</option>
+                                    {% comment %} <option value="auditRecord">Audit_Log</option>
+                                    <option value="sessionRecord">Session_Log</option>
+                                    <option value="healthRecord">Health_Log</option> {% endcomment %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type='text' name='code' placeholder='code입력'>
+                            </td>
+                            <td>
+                                <select name="codeselector">
+                                    <option value="eq">==</option>
+                                    <option value="noteq">=!</option>
+                                    </optgroup>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="severity">
+                                    <option value=""></option>
+                                    <option value="cleared">Cleared</option>
+                                    <option value="info">Info</option>
+                                    <option value="warning">Warning</option>
+                                    <option value="minor">Minor</option>
+                                    <option value="major">Major</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type='text' name="descr" placeholder="description 입력">
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="summit">Summit</button>
+                <table class="page_size">
+                    <td>
+                        <span style="text-align: center">Page Size</span>
+                        <span scope="col">
+                            <select name="page_size">
+                                <optgroup label="page_size">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                        </span>
+                    </td>
+                </table>
+            </form>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col">center</th>
+                        <th scope="col">severity</th>
+                        <th scope="col">domain</th>
+                        <th scope="col">type</th>
+                        <th scope="col">code</th>
+                        <th scope="col">count</th>
+                        <th scope="col">descr</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    {% for center in log_data %}
+                        {% for log in center %}
+                        <td>{{log.faultSummary.attributes.center}}</td>
+                        <td>{{log.faultSummary.attributes.severity}}</td>
+                        <td>{{log.faultSummary.attributes.domain}}</td>
+                        <td>{{log.faultSummary.attributes.type}}</td>
+                        <td>{{log.faultSummary.attributes.code}}</td>
+                        <td>{{log.faultSummary.attributes.count}}</td>
+                        <td>{{log.faultSummary.attributes.descr}}</td>
+                    </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        <script src="static/js/calendar.js"></script>
+    </main>
+</body>
+</html>
+
+
+
+
