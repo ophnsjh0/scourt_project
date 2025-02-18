@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import path
-from .models import NetworkEnv
-from rack.models import Rack
+from .models import NetworkVm
+from network_env.models import NetworkEnv
 from ip.models import Ip
 from .forms import ExcelUploadForm
 import pandas as pd
@@ -23,32 +23,28 @@ def upload_excel(modeladmin, request, queryset):
                 df = pd.read_excel(excel_file, sheet_name=sheet_name, engine="opnpyxl")
 
                 for _, row in df.iterrows():
-                    rack_name = row['rack']
-                    rack, _ = Rack.objects.get_or_create(name=rack_name)
+                    uphost_name = row["up_host"]
+                    uphost, _ = NetworkEnv.objects.get_or_create(name=uphost_name)
 
-                    NetworkEnv.objects.update_or_create(
+                    NetworkVm.objects.update_or_create(
                         defaults={
-                            'rack' : rack,
+                            "uphost": uphost,
                         },
-                        area=row['area'],
-                        category=row['category'],
-                        khost=row['khost'],
-                        host=row['host'],
-                        vendor=row['vendor'],
-                        model=row['model'],
-                        serial=row['serial'],
-                        os=row['os'],
+                        category=row["category"],
+                        khost=row["khost"],
+                        host=row["host"],
+                        os=row["os"],
                     )
-                    
-                    network_env, _ = NetworkEnv.objects.get_or_create(host=row['host'])
-                    ip_names = row['ip'].split(',') if pd.notna(row['ip']) else []
-                    
+
+                    network_vm, _ = NetworkVm.objects.get_or_create(host=row["host"])
+                    ip_names = row["ip"].split(",") if pd.notna(row["ip"]) else []
+
                     ips = []
                     for ip_name in ip_names:
                         ip, _ = Ip.objects.get_or_create(ip=ip_name.strip())
                         ips.append(ip)
-                        
-                    network_env.ip.set(ips)
+
+                    network_vm.ip.set(ips)
 
                 messages.success(request, "Excel File Uploaded Successfully")
             except Exception as e:
@@ -56,14 +52,14 @@ def upload_excel(modeladmin, request, queryset):
             return redirect("..")
 
     form = ExcelUploadForm()
-    return render(request, "networkenv/excel_upload.html", {"form": form})
+    return render(request, "networkvm/excel_upload.html", {"form": form})
 
 
-@admin.register(NetworkEnv)
-class NetworkEnvAdmin(admin.ModelAdmin):
-    list_display = ('area', 'category', 'khost', 'host', 'vendor', 'model', 'rack')
-    list_filter = ('area', 'category', 'vendor', 'model', 'rack')
-    search_fields = ("area", "category", "khost", "host", "vendor", "model")
+@admin.register(NetworkVm)
+class NetworkVmAdmin(admin.ModelAdmin):
+    list_display = ("category", "khost", "host", "os", "uphost")
+    list_filter = ("category", "uphost")
+    search_fields = ("category", "khost", "host", "ip", "os", "uphost")
     action = [upload_excel]
 
     def chagelist_view(self, request, extra_context=None):
