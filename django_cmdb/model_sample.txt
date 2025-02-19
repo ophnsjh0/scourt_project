@@ -1,0 +1,57 @@
+1. datacenter
+ 1) Name(uq) - 법원전산정보센터
+ 2) Location - 분당전산정보센터
+ 3) Address - 경기도 성남시 분당로 야탑로65번길 23
+ 4) Role - 데이터센터
+
+2. Rack 
+ 1) Datacenter(FK) - 법원전산정보센터
+ 2) Name(uq) - E4-B-WAS9
+ 3) Location - 분당3층동관
+ 4) RackType - 전용
+ 5) Size - 600*1000*1920 = 42u
+ 6) Phase - 1C-3P
+ 7) Voltage - 208V
+ 8) Current - 30A
+ 9) PDU count - 2
+ 10) A Panel - UA-1A-1-14
+ 11) B Panel - UA-1B-1-14
+ 12) Part - 네트워크
+ 13) Job - 사법
+
+3. IP 
+ 1) Vrf - ext_app
+ 2) Network - ext_app
+ 3) Ip(uq) - 10.10.10.10
+ 4) Mac - 00:00:00:00:00
+ 5) Node - 2303
+ 6) Interface - eth1/30
+ 7) Host(mtm) - BJJODEMF01
+ 8) Connect(mtm) - ext_vCenter
+
+4. User
+ 1) ID - ophnsjh0
+ 2) Name - 신정훈
+ 3) Job - Network
+ -Permission
+ -Important dates
+
+5. Network_ENV(Server_Env)
+ 1) Area - 운영
+ 2) Category - L3스위치
+ 3) Khost - 시스코백본SPINE스위치01
+ 4) Host - ciscospine01
+ 5) Ip(mtm) - 10.10.10.10
+ 6) Vendor - cisco
+ 7) Model - N9K-C93600CD-GX
+ 8) Serial - FDO20000123
+ 9) Os - NX-OS ACI 15.2 
+ 10) Rack(FK) - W1-C-NW8
+
+6. Network_VM(Server_VM)
+ 1) Category - L4스위치
+ 2) Khost - 시트릭스내부SLB스위치01
+ 3) Host - citrixslb01
+ 4) Ip(mtm) - 11.11.11.11
+ 5) os -13.0 Build 85.19
+ 6) Uphost(FK) - ciscospine01
