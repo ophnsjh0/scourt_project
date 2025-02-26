@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/pico.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'custom.css')}}">
+    <title>Citrix_Check</title>
+</head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        color: #F7D358;
+    }
+
+    td{
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    button {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        verical-align: middle;
+        font-size: 14px;
+    }
+</style>
+<body>
+    <main class="container">
+        <h2>Citrix Check</h2>
+        <nav>
+            <ul>
+                <li><a href="/autocheck/export?vendor={{vendor}}" role="button">Export</a></li>
+            </ul>
+            <ul>
+                <li><a href="/" role="button">Home</a></li>
+            </ul>
+        </nav>
+        {% comment %} <nav>
+            <ul>
+                <li>
+                    <form class="form dark noshowing">
+                        <input id="changeBtn_dark" type="button" value="Dark" />
+                    </form>
+                </li>
+                <li>
+                    <form class="form light noshowing">
+                        <input id="changeBtn_light" type="button" value="Light" />
+                    </form>
+                </li>
+            </ul>
+        </nav> {% endcomment %}
+        <figure>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th colspan="5">장비정보</th>
+                        <th colspan="3">Resource</th>
+                        <th colspan="7">Interface</th>
+                        <th colspan="5">SLB Info</th>
+                        <th colspan="2">LOG</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Hostname</th>
+                        <th scope="col">Ip</th>
+                        <th scope="col">Serial</th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Version</th>
+                        <th scope="col">CPU_Use</th>
+                        <th scope="col">MEM_Use</th>
+                        <th scope="col">결과</th>
+                        <th scope="col">1G_up</th>
+                        <th scope="col">1G_down</th>
+                        <th scope="col">10G_up</th>
+                        <th scope="col">10G_down</th>
+                        <th scope="col">ch_up</th>
+                        <th scope="col">ch_down</th>
+                        <th scope="col">결과</th>
+                        <th scope="col">Vserver_up</th>
+                        <th scope="col">Vserver_down</th>
+                        <th scope="col">Service_up</th>
+                        <th scope="col">Service_down</th>
+                        <th scope="col">결과</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for env in all_data %}
+                        {% for result in result_data %}
+                            {% if env.Hostname == result.hostname %}
+                                <tr>
+                                    <td>{{env.Hostname}}</td>
+                                    <td>{{env.Ip}}</td>
+                                    <td>{{env.Serial}}</td>
+                                    <td>{{env.Model}}</td>
+                                    <td>{{env.Version}}</td>
+                                    <td>{{env.CPU_Use}}</td>
+                                    <td>{{env.MEM_Use}}</td>
+                                    {% if result.resource == '정상' %}
+                                        <td style="color: #1e88e5">{{result.resource}}</td>
+                                    {% else %}
+                                        <td style="color: #e53935">{{result.resource}}</td>
+                                    {% endif %}
+                                    <td>{{env['1G_up']}}</td>
+                                    <td>{{env['1G_down']}}</td>
+                                    <td>{{env['10G_up']}}</td>
+                                    <td>{{env['10G_down']}}</td>
+                                    <td>{{env.ch_up}}</td>
+                                    <td>{{env.ch_down}}</td>
+                                    {% if result.resource == '정상' %}
+                                        <td style="color: #1e88e5">{{result.interface}}</td>
+                                    {% else %}
+                                        <td style="color: #e53935">{{result.interface}}</td>
+                                    {% endif %}
+                                    <td>{{env.Vserver_up}}</td>
+                                    <td>{{env.Vserver_down}}</td>
+                                    <td>{{env.Service_up}}</td>
+                                    <td>{{env.Service_down}}</td>
+                                    {% if result.resource == '정상' %}
+                                        <td style="color: #1e88e5">{{result.slbinfo}}</td>
+                                    {% else %}
+                                        <td style="color: #e53935">{{result.slbinfo}}</td>
+                                    {% endif %}
+                                    <td>
+                                        <form action='/autocheck/log' method='get'>
+                                            <input type="hidden" value="{{env.Ip}}" name="switch_ip">
+                                            <input type="hidden" value="{{vendor}}" name="vendor">
+                                            <input type="hidden" value="{{env.Hostname}}" name="hostname">
+                                            <button type="submit" style="background-color: #FBF5EF; color: #424242">LOG확인</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </figure>
+    <script src="{{ url_for('static', filename = 'js/theme.js')}}"></script>
+    </main>
+</body>
+</html>

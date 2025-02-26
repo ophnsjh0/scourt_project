@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/pico.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'custom.css')}}">
+    <title>AutoCheck</title>
+</head>
+<body>
+    <main class="container">
+        <h1>Network AutoCheck</h1>
+        <h3>검색 메뉴</h3>
+            <form action='/autocheck'>
+                <label for="l4"></label><br />
+                <select name="vendor">
+                    <optgroup label="점검대상 선택">
+                        <option value="citrix">CITRIX 장비점검</option>
+                        <option value="cisco">CISCO 장비점검</option>
+                    </optgroup>
+                </select>
+                <button>START</button>
+            </form>
+    </main>
+    <script src="{{ url_for('static', filename = 'js/theme.js')}}"></script>
+</body>
+</html>
