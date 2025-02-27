@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/pico.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'custom.css')}}">
+    <title>SLB Search</title>
+</head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        color: #F7D358;
+    }
+
+    td{
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    button {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        verical-align: middle;
+        font-size: 14px;
+    }
+</style>
+<body>
+    <main class="container">
+        <h3>Citrix L4 SLB Search</h3>
+            <form action='/lbvserver'>
+                <h5>L4선택</h5>
+                <label for="l4"></label><br />
+                <select name="name">
+                    <optgroup label="내부">
+                        <option value="citrix1">Citrix1</option>
+                        <option value="citrix2">Citrix2</option>
+                        <option value="citrix3">Citrix3</option>
+                        <option value="citrix4">Citrix4</option>
+                        <option value="citrix5">Citrix5</option>
+                        <option value="citrix6">Citrix6</option>
+                        <option value="citrix7">Citrix7</option>
+                        <option value="citrix8">Citrix8</option>
+                    </optgrooup>
+                </select>
+                <input type='hidden' name='ip'>
+                <button>Search</button>
+            </form>
+    <div class="copy">
+        =================================================================================<br>
+        Citrix SLB Info Watch (2021.02)<br>
+        Copyright (c) 2021 ShinJH and/or it affiliates.<br>
+        =================================================================================<br>
+    </div>
+    </main>
+    <script src="{{ url_for('static', filename = 'js/theme.js')}}"></script>
+</body>
+</html>

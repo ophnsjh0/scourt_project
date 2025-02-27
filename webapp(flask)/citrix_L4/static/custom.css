@@ -1,0 +1,11 @@
+th {
+    color: #fdd835;
+}
+
+.noshowing {
+    display: none;
+}
+
+.showing { 
+    display: block;
+}

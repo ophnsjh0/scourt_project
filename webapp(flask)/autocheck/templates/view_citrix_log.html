@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/pico.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'custom.css')}}">
+    <title>AutoCheck</title>
+</head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        color: #F7D358;
+    }
+
+    td{
+        border: 1px solid black;
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    button {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        verical-align: middle;
+        font-size: 14px;
+    }
+</style>
+<body>
+    <main class="container">
+        <h1>로그확인</h1>
+        <nav>
+            <ul>
+                <li><a href="javascript:window.history.back();" role="button">Back</a></li>
+            </ul>
+        </nav>
+        <h3>{{hostname}}</h3>
+            <figure>
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Event_Code</th>
+                            <th scope="col">Log</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for log_info in log_data %}
+                        <tr>
+                            <td>{{log_info.time}}</td>
+                            <td>{{log_info.eventcode}}</td>
+                            <td>{{log_info.text}}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </figure>
+    </main>
+    <script src="{{ url_for('static', filename = 'js/theme.js')}}"></script>
+</body>
+</html>

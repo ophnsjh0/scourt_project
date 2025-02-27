@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/pico.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'custom.css')}}">
+    <title>Vserver Info</title>
+</head>
+<style>
+    .copy {
+        display: flex;
+        justify-content: center;
+        border: 1px solid black;
+        padding: 8px;
+        text-aligh: center;
+        vertical-align: middle;
+        font-size: 13px;
+        color: #BFC9CA;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        color: #F7D358;
+    }
+
+    td{
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    button {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        verical-align: middle;
+        font-size: 14px;
+    }
+</style>
+<body>
+    <main class="container">
+        <h2>Vserver Result</h2>
+        <nav>
+            <ul>
+                <li><a href="/export?name={{l4_name}}&ip={{l4_ip}}" role="button">Export</a></li>
+            </ul>
+            <ul>
+                <li><a href="/" role="button">🏚</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <ul>
+                <li>
+                    <form class="form dark noshowing">
+                        <input id="changeBtn_dark" type="button" value="🌚" />
+                    </from>
+                </li>
+                <li>
+                    <form class="form light showing">
+                        <input id="changeBtn_light" type="button" value="🌞" />
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <figure>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col">Vserver</th>
+                        <th scope="col">VIP</th>
+                        <th scope="col">VPort</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Protocol</th>
+                        <th scope="col">State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for vserver in lbvservers %}
+                    <tr>
+                        <td><a href="/lbvserver_binding?name={{l4_name}}&vserver={{vserver.name}}">{{vserver.name}}</a></td>
+                        <td>{{vserver.vip}}</td>
+                        <td>{{vserver.vport}}</td>
+                        <td>{{vserver.lbmethod}}</td>
+                        <td>{{vserver.protocol}}</td>
+                        {% if vserver.state == "DOWN" %}
+                            <td style="color: #e53935">{{vserver.state}}</td>
+                        {% else %}
+                            <td style="color: #1e88e5">{{vserver.state}}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </figure>
+    <script src="{{ url_for('static', filename = 'js/theme.js')}}"></script>
+    <div class="copy">
+        =================================================================================<br>
+        Citrix SLB Info Watch (2021.02)<br>
+        Copyright (c) 2021 ShinJH and/or it affiliates.<br>
+        =================================================================================<br>
+    </div>
+    </main> 
+</body>
+</html>
