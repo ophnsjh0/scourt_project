@@ -1,6 +1,6 @@
 import requests
 from requests.auth import HTTPBasicAuth
-from server_seesion import SessionManager
+from server_session import SessionManager
 from prettytable import PrettyTable
 
 server = {'ip':'10.10.10.10', 'id':'administrator@vsphere.local', 'password':'1234qwer'}
