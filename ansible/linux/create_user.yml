@@ -1,0 +1,28 @@
+# ansible 계정 배포
+---
+- name: add user 
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - name: Add mo group
+    group:
+      name: mo
+      state: present
+      gid: 6000
+
+  - name: Add user ansible
+    user:
+      name: ansible
+      shell: /bin/bash
+      state: present
+      create_home: true
+      uid: 6004
+      group: mo 
+      groups: wheel
+
+  - name: Create a password for user
+    user:
+      name: ansible
+      password: "{{ '1234qwer' | password_hash('sha512') }}"

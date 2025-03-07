@@ -1,0 +1,62 @@
+### JAVE JDK 배포 및 인스톨
+---
+- name: copy to remote
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  vars:
+   - source : /APP/jdk-8u431-linux-x64.tar.gz
+   - dest : /home/admin/jdk-8u431-linux-x64.tar.gz
+  
+  tasks:
+    - name: 2. copy file to remote 
+      copy:
+        src: "{{ source }}"
+        dest: "{{ dest }}"
+        force: yes
+        backup: yes
+      register: result 
+
+    - name: 3. unzip file 
+      ansible.builtin.shell:
+        cmd: tar -xvf {{ dest }}
+      
+    - name: 4. moving files
+      ansible.builtin.shell:
+        cmd: mv /home/admin/jdk1.8.0_431/ /user/lib/jvm/java8u431
+    
+    - name: 5-1. Delete JAVA HOME from /etc/profile
+      ansible.builtin.shell:
+        cmd: "{{ item }}"
+      with_list:
+        - sed -i '\|ur/lib/jvm/java8|d' /etc/profile
+        - sed -i '\|_HOME/bin|d' /etc/profile
+    
+    - name: 5-2. Configure JAVA HOME
+      ansible.builtin.shell:
+        cmd: "{{ item }}"
+      with_list:
+        - echo "" >> /etch/profile
+        - echo "################_JAVA_Env_##################" >> /etc/profile
+        - echo "" >> /etch/profile 
+        - echo "export JAVA_HOME=/usr/lib/jvm/java8u431" >> /etc/profile
+        - echo "export PATH=$PATH:$JAVA_HOME/bin" >> /etc/profile
+        - echo " " >> /etch/profile
+        - echo "#############################################" >> /etch/profile
+        - echo "" >> /etch/profile
+    
+    - name: 6. Set Up symblic_link to JAVA for all users
+      ansible.builtin.shell:
+        cmd: "{{ item }}"
+      with_list:
+        - update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/java8u431/bin/java" 1
+        - update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/java8u431/bin/javac" 1
+        - update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/java8u431/bin/javaws" 1
+        - update-alternatives --set java /usr/lib/jvm/java8u431/bin/java
+        - update-alternatives --set javac /usr/lib/jvm/java8u431/bin/javac
+        - update-alternatives --set javaws /usr/lib/jvm/java8u431/bin/javaws
+
+    - name: 7. chown root /usr/lib/jvm/java8u431/
+      ansible.builtin.shell:
+        cmd: chown -R root:root /user/lib/jvm/java8u431/*

@@ -1,0 +1,19 @@
+#linux file 삭제 
+---
+- name: Delete files
+  hosts: "{{ target }}"
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  tasks:
+  - name: delete old file
+    ansible.builtin.file:
+      path: "/home/sysadm/{{ item }}"
+      state: absent
+    with_list:
+      - cpu.sh
+      - mem.sh
+      - syscheck.sh
+      - 1_Linux_chk.sh
+      - PM.sh

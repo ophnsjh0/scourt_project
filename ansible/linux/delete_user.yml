@@ -1,0 +1,15 @@
+# linux User 삭제
+---
+- name: Delete User
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: yes
+
+  vars:
+    myuser: "deleteuser"
+
+  tasks:
+  - name: delete user username
+    user:
+      name: "{{ myuser }}"
+      state: absent

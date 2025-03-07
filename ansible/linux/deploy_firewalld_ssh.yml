@@ -1,0 +1,41 @@
+# linux firewalld 설정 배포
+---
+- name: firewalld config
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - name: start firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      state: started
+      enabled: yes
+
+  # SSH 접속관련 
+  - name: Configuration firewalld
+    ansible.builtin.shell:
+      cmd: "{{ item }}"
+    with_list:
+      - firewall-cmd --permanent --new-zone=SSH_ZONE
+      - firewall-cmd --permanent --zone=SSH_ZONE --add-source=10.10.10.10 
+      - firewall-cmd --permanent --zone=SSH_ZONE --add-source=20.20.20.20
+      - firewall-cmd --permanent --zone=SSH_ZONE --add-service=ssh
+      - firewall-cmd --permanent --zone=public --remove-service=ssh
+  
+  - name: reload firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      state: reloaded
+
+## firewalld 원복
+#sudo firewall-cmd --permanent --zone=public --add-service=ssh
+#sudo firewall-cmd --permanent --delete-zone=SSH_ZONE
+#sudo firewall-cmd --reload
+
+#확인 
+#sudo firewall-cmd --get-zones
+#firewall-cmd --list-all
+
+#전체 초기화 
+#sudo firewall-cmd --complete-reload
