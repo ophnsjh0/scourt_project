@@ -1,0 +1,88 @@
+#linux 보안점검(SolidStep) 배포 및 실행  
+---
+- name: run shell
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  vars:
+    - dest_dir: "/home/sysadm/solidstep/"
+
+  tasks:
+  - name: Upload files local to remote
+    copy: src=/APP/ansible/playbooks/upload_files/{{ item }} dest={{ dest_dir }}{{ item }} mode=preserve
+    loop:
+      - SS_AS-linux-64
+      - SS_AS-linux-64.info
+      - SS_AS-linux-64.sig
+      - SS_unixcfg.ini
+    register: copyfiles
+    tags: copyfile
+
+  - name:  Download File remote local
+    find:
+      paths: "/home/sysadm/solidstep"
+      recurse: no
+      patterns: "0_SERVER*.enc"
+    register: files_to_copy
+    tags: files_to_copy
+
+  - name: Fetch File from remote
+    fetch:
+      src: "{{ item.path }}"
+      dest: /tmp/solidstep/
+      flat: yes
+    with_items: "{{ files_to_copy.files}}"
+    tags: files_to_copy
+    become: yes
+    when: files_to_copy.matched != 0
+
+
+# ---
+# - name: Deploy and Execute SolidStep Security Check
+#   hosts: "{{ target }}"
+#   become: yes
+#   gather_facts: no
+
+#   vars:
+#     dest_dir: "/home/sysadm/solidstep"
+#     local_upload_dir: "/APP/ansible/playbooks/upload_files"
+#     local_fetch_dir: "/tmp/solidstep/"
+
+#   tasks:
+#     - name: Ensure destination directory exists
+#       file:
+#         path: "{{ dest_dir }}"
+#         state: directory
+#         mode: '0755'
+
+#     - name: Upload files from local to remote
+#       copy:
+#         src: "{{ local_upload_dir }}/{{ item }}"
+#         dest: "{{ dest_dir }}/{{ item }}"
+#         mode: preserve
+#       loop:
+#         - SS_AS-linux-64
+#         - SS_AS-linux-64.info
+#         - SS_AS-linux-64.sig
+#         - SS_unixcfg.ini
+#       register: copyfiles
+#       tags: copyfile
+
+#     - name: Find encrypted files for download
+#       find:
+#         paths: "/home/sysadm/solidstep"
+#         recurse: no
+#         patterns: "0_SERVER*.enc"
+#       register: files_to_copy
+#       tags: files_to_copy
+
+#     - name: Fetch encrypted files from remote to local
+#       fetch:
+#         src: "{{ item.path }}"
+#         dest: "{{ local_fetch_dir }}"
+#         flat: yes
+#       loop: "{{ files_to_copy.files }}"
+#       tags: files_to_copy
+#       become: yes
+#       when: files_to_copy.matched > 0

@@ -1,0 +1,19 @@
+---
+- name: win Change Admin Username
+  hosts: "{{ target }}"
+
+  vars:
+  - win_user : swupdf
+
+
+  tasks:
+  - name: Change Admin Username
+    # win_shell: Get-LocalUser -Name {{ win_user }}
+    ansible.windows.win_powershell:
+      script: | 
+        Get-LocalUser -Name {{ win_user }} | select name, lastlogon | ft -hide
+    register: myshell_output
+
+  - name: show debug
+    debug:
+      var: myshell_output

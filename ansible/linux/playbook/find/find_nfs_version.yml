@@ -1,0 +1,25 @@
+# nfs version 확인 
+---
+- name: Find nfs version
+  host: "{{ target }}"
+  become: no
+  gather_facts: no
+  # become_user: root
+
+  tasks:
+    - name: Find nfs ver4, 4.0
+      ansible.builtin.shell:
+        cmd: cat /etc/fstab | grep nfs | grep -v "^#"
+      register: shell_result
+
+    - name: debug
+      debug:
+        msg: "{{shell_result.stdout}}"
+      register: data_line
+
+    - name: save the result
+      lineinfile:
+        path: "./fstab_nfs.txt"
+        line: "svr {{ inventory_hostname }}\t{{ shell_result.stdout }}"
+        create: true
+      delegate_to: localhost

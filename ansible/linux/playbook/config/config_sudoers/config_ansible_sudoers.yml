@@ -1,0 +1,27 @@
+# ansible 계정 sudoers에 추가 &  wheel Group 정지   
+---
+- name: modify sudoers config
+  hosts: "{{ target }}"
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  tasks:
+  - name: add ansible
+    lineinfile:
+      path: /etc/sudoers
+      #regexp: '^root'
+      insertafter: "^root"
+      line: "ansible        ALL=(ALL)       NOPASSWD: ALL"
+  
+  - name: Stop wheel group 1
+    lineinfile:
+      path: /etc/sudoers
+      regexp: '^%wheel    ALL=(ALL)     ALL'
+      line: '#%wheel    ALL=(ALL)     ALL'
+
+  # - name: Stop wheel group 2
+  #   lineinfile:
+  #     path: /etc/sudoers
+  #     regexp: '^%wheel    ALL=(ALL)    NOPASSWD: ALL'
+  #     line: '#%wheel    ALL=(ALL)    NOPASSWD: ALL'

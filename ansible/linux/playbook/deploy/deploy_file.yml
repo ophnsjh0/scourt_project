@@ -1,0 +1,31 @@
+#file 서버 배포  
+---
+- name: copy to remote
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: copy file to remote1
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/product/sycros/custom/"
+        owner: swsycros
+        group: mo
+        mode: "0755"
+        force: yes
+      with_list:
+        - /home/sysadm/PrmUsr_NTP_Check.sh
+        - /home/sysadm/PrmUsr_System_Process.sh
+        - /home/sysadm/PrmUsr_Nfs_Status_Check.sh
+        - /home/sysadm/PrmUsr_CPU_Check.sh
+
+    - name: copy file to remote2
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/etc/init.d"
+        mode: "0755"
+        force: yes
+      with_list:
+        - /home/sysadm/system_status
+        - /home/sysadm/oper_solution

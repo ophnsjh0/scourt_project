@@ -1,0 +1,51 @@
+## logpresso 솔루션 Agent 서버배포
+---
+- name: Install Logpresso Agent
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  var:
+    - logpresso_file : logpresso-sentry-linux-10.10.10.10-4.0.2404.0-u3073.tar.gz
+
+  tasks:
+    - name: 1. Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /product/logpresso
+        state: directory
+        mode: '0755'
+
+    - name: 2. Copy file to remote
+      copy:
+        src: /APP/ansible/playbooks/upload_files/{{ logpresso_file }}
+        dest: /home/sysadm/{{ logpresso_file }}
+        force: no
+      register: copy_result
+
+    - name: 3. Extract a file
+      unarchive:
+        src: /home/sysadm/{{ logpresso_file }}
+        dest: /product/logpresso
+        remote_src: yes
+      when: copy_result is changed
+    
+    - name: 4. Checking sentry.sh file if a file exists
+      stat:
+        path: /product/logpresso/sentry.sh
+      register: file_status
+
+    - name: 5. Excute script
+      ansible.builtin.shell:
+        cmd: nohup /product/logpresso/sentry.sh start 2>&1
+      when: file_status.stat.exists
+    
+    - name: 6. Add reboot option to crontab
+      lineinfile:
+        path: /etc/crontab
+        line: "@reboot /product/logpresso/sentry.sh start"
+        insertbefore: "linux_server_c"
+
+    - name: 7. Delete Installation File
+      ansible.builtin.file:
+        path: /home/sysadm/{{ logpresso_file }}
+        state: absent

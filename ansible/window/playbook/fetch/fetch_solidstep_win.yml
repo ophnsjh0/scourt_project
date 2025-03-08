@@ -1,0 +1,21 @@
+# Window Solidstep 점검결과 Fetch
+---
+- name: Fetch File From Window Server to local
+  hosts: "{{ target }}"
+  gather_facts: no
+
+  tasks:
+    - name: find result file
+      win_find: paths="d:\\New_Solid_Step_windows" recurse=no patterns="0_SERVER*.enc"
+      register: files_to_copy
+      tags: files_to_copy
+
+    - name: Fetch File from remote
+      fetch:
+        src: "{{ item.path }}"
+        dest: /tmp/solidstep/win/
+        # validate_checksum: false
+        flat: yes
+      with_items: "{{ file_to_copy.files }}"
+      tags: files_to_copy
+      when: files_to_copy.matched != 0

@@ -1,0 +1,32 @@
+# window localuser 확인 후 CSV 출력
+---
+- name: Run Basic Powershell script
+  hosts: "{{ target }}"
+  gather_facts: no
+
+  tasks:
+  - name: get local user on window server
+    ansible.windows.win_powershell:
+      script: |
+        get-localuser
+    register: getuser
+
+  - name: display
+    debug:
+      msg: "{{ getuser }}"
+
+  # - name: Save all hosts dictionary data to file
+  #   lineinfile:
+  #     path: ./win_users.txt
+  #     line: "{{ getuser.stdout_lines }}"
+  #     create: yes
+  #   delegate_to: localhost
+
+  - name: Build out CSV File
+    ansible.builtin.lineinfile:
+      dest: "/APP/ansible/playbooks/export/{{ inventory_hostname}}.localuser"
+      line: "{{ getuser | to_json }}"
+      create: true
+      state: present
+    delegate_to: localhost
+      

@@ -1,0 +1,21 @@
+# sed를 이용한 sudoers wheel Group 정지   
+---
+- name: modify sudoers config with sed
+  hosts: "{{ target }}"
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  tasks:
+  - name: edit sudoers config 
+    ansible.builtin.shell:
+      cmd: "{{ item }}"
+      with_list:
+        # - sed -i "/^root/a\ansible      ALL=(ALL)     "NOPASSWD:" ALL"  /etc/sudoers
+        # - sed -i "s/^%wheel/#%wheel/g"  /etc/sudoers
+        - sed -i "s/%wheel/#%wheel/g" /etc/sudoers
+      register: shell_result
+  
+  - name: Debug
+    debug:
+      msg: "{{ shell_result }}"

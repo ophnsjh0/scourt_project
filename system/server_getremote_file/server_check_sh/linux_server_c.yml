@@ -1,0 +1,10 @@
+---
+- name: copy to remote
+  host: "{{target}}"
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: daily_check
+      ansible.builtin.shell:
+        cmd: sh /home/sysadm/emergency/linux_server_c_sa.sh

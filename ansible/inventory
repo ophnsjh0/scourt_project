@@ -1,0 +1,23 @@
+[server 1]
+WEBSERVER01 ansible_host=10.10.10.1
+WEBSERVER02 ansible_host=10.10.10.2
+WEBSERVER03 ansible_host=10.10.10.3
+WEBSERVER04 ansible_host=10.10.10.4
+
+[server 2]
+WASSERVER01 ansible_host=10.10.20.1
+WASSERVER02 ansible_host=10.10.20.2
+WASSERVER03 ansible_host=10.10.20.3
+WASSERVER04 ansible_host=10.10.20.4
+
+[tibero_dev]
+10.10.10.30 ansible_become_pass="{{ tibero_passwd }}"
+
+[win:vars]
+ansible_user=administrator
+ansible_password="1234qwer"
+ansible_connection=ssh
+ansible_shell_type=powrshell
+ansible_python_interpreter=c:\Program Files\Python311
+ansible_ssh_common_args:: '-o StrictHostKeyChecking=no UserKnownHostsFile=/dev/null'
+ansible_become_user: "{{ ansible_user }}"

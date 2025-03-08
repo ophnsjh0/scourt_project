@@ -1,0 +1,23 @@
+---
+- name: win user passwd change
+  hosts: "{{ target }}"
+
+  vars:
+    myuse: "scadmin"
+
+
+  tasks:
+  - name: changing user passwd
+    ansible.windows.win_user:
+      name: "{{ myuser }}"
+      password: "{{ my_win_pass }}"
+      state: present
+    register: myshell_output
+
+  - name: show debug
+    debug:
+      var : myshell_output
+
+# ansible.windows.win_powershell:
+#   script: |
+#     Set-LocalUser -Name "scadmin" -Password (ConvertTo-SecureString -AsPlainText "NewPassword" -Force)
