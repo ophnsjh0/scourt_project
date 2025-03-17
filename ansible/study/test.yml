@@ -1,0 +1,12 @@
+---
+- name: Find specific account
+  hosts: localhost
+
+  tasks:
+    - name: date output
+      command: ls -al
+      register: date_result
+
+    - name: debug
+      debug:
+        msg: "{{date_result.stdout}}"

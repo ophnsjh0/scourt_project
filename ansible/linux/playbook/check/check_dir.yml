@@ -1,0 +1,21 @@
+# 특정 디렉토리 파일(apache-ssl) 확인 
+---
+- name: Check Directory or File
+  host: "{{ target }}"
+  gather_facts: no
+
+  tasks:
+  - name: Check file or directory exists
+    stat:
+      path: /etc/ld.so.conf.d/apache-2.4.59_openssl-3.0.13.conf
+    register: check_data
+
+  - name: Report if a file, directory exists
+    debug:
+      msg: "The file or directory exists"
+    when: check_data.stat.exists
+
+  - name: Report a missing file
+    debug:
+      msg:  "The file or derectory doesn't exists"
+    when: not check_data.stat.exists

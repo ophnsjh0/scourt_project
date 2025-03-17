@@ -1,0 +1,46 @@
+---
+- name: copy to remote
+  hosts: "{{ target }}"
+  gather_facts: no
+  become: yes
+
+  vars:
+    - source : /home/swansible/SCAgent.linux.3372.tar
+    - dest: /home/swansible/SCAgent.linux.3372.tar
+
+  tasks:
+    - name: copy file to remote
+      copy:
+        src: "{{ source }}"
+        dest: "{{ dest }}"
+        force: yes
+        backup: yes
+      register: result
+
+    - name: mkdir /product/sycros
+      ansible.builtin.shell:
+        cmd: mkdir /product/sycros
+
+    - name: chown swsycros.mo /product/sycros
+      ansible.builtin.shell:
+        cmd:  chown swsycros.mo /product/sycros
+
+    - name: SCAgent.linux.3372.tar
+      ansible.builtin.shell:
+        cmd: tar -xvf /home/swansible/SCAgent.linux.3372.tar -C /product/sycros/
+    
+    - name: mkdir /logs/sycros
+      ansible.builtin.shell:
+        cmd: mkdir /logs/sycros
+
+    - name: chown swsycros.mo /logs/sycros
+      ansible.builtin.shell:
+        cmd: chown  swsycros.mo /logs/sycros
+
+    - name: chmod 755 /logs/sycros
+      ansible.builtin.shell:
+        cmd:  chmod 755 /logs/sycros
+
+    - name: agent start
+      ansible.builtin.shell:
+        cmd: su - swsycros -c '/product/sycros/agent.sh'

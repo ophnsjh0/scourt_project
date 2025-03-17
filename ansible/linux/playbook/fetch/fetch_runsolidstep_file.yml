@@ -1,0 +1,60 @@
+# Solidstep 실행 후 점검 file fetch
+- name: Run Solidstep Script on Linux Server
+  hosts: "{{ target }}"
+  gather_facts: no
+
+  vars:
+    - dest_dir : "/tmp/solidstep"
+
+  tasks:
+  - name: Create a directory if it does no exist on remote
+    file:
+      path: /tmp/solidstep
+      state: directory
+      mode: '0755'
+    register: mkdir
+
+  - name: Create a directory if it does no exist on local host
+    file:
+      path: /tmp/solidstep
+      state: directory
+      mode: '0755'
+    register: mkdir
+    delegate_to: localhost
+  
+  - name: copy file to remote
+    copy: src=/home/swansible/ansible/files/{{ item }} dest={{ dest_dir }}{{ item }} mode=preserve
+    loop:
+      - SS_AS-linux-64
+      - SS_AS-linux-64.info
+      - SS_AS-linux-64.sig
+      - SS_unixcfg.ini
+    register: copyfiles
+    tags: copyfile
+    # when: mkdir.changed
+
+  - name: run shell script
+    command: "/tmp/solidstep/SS_AS-linux-64"
+    become: yes
+    register: shell_out
+    # when: copyfiles.ok
+    tags: runshell
+
+  - name: Find files to copy
+    find:
+      paths: "/tmp/solidstep"
+      recurse: no
+      patterns: "0_SERVER*.enc"
+    register: files_to_copy
+    tags: files_to_copy
+  
+  - name: Fetch file from remote
+    fetch:
+      src: "{{ item.path }}"
+      dest: /tmp/solidstep/
+      # validate_checksum: false
+      flat: yes
+    with_items: "{{ files_to_copy.files }}"
+    tags: files_to_copy
+    become: yes
+    when: files_to_copy.matched != 0

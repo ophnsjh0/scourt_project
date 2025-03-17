@@ -1,0 +1,30 @@
+# CPU 사용량 확인
+---
+- name: cpu check
+  host: "{{ target }}"
+  gather_facts: true
+
+  tasks:
+    - name: Print all facts
+      debug:
+        var: ansible_facts
+    
+    - name: Get CPU usage
+      shell: "top -n -n 1"
+      register: top_output
+
+    - name: Set CPU usage facts
+      set_fact:
+        user_cpu: "{{ top_ouput.stdout_lines[2].split()[1] }}"
+        system_cpu: "{{ top_output.stdout_lines[2].split()[3] }}"
+
+    - name: Output usage facts
+      debug:
+        msg:
+          - "User CPU usage: {{ user_cpu }}"
+          - "System CPU usage: {{ system_cpu }}"
+          - "Host name : {{ ansible_facts.hostname }}"
+          - "product_name : {{ ansible_facts.product_name}}"
+
+          
+

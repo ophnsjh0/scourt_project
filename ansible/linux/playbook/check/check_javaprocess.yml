@@ -1,0 +1,59 @@
+# server에 구동중인 java jvm 네임 검색 (서비스 확인)
+---
+- name: java jvm in server 
+  hosts: "{{target}}"
+  gather_facts: yes
+
+  tasks:
+  - name: get java processes with ps command
+    shell: ps -fC java
+    register: java_processes
+
+  - name: Find and Set var for JVM names
+    set_fact:
+      myvalue: "{{ java_processes.stdout_lines | regex_findall(regexp) }}"
+    vars:
+      regexp: '-server -([A-Z0-9]+)_([A-Z0-9]+_?[A-Z0-9]*)'
+    when: java_processes.rc == 0 
+    register: setfact
+  
+  - debug:
+      msg: "{{ myvalue }}"
+  
+  - name: Get Final JVM Names and set to list data 
+    set_fact:
+      jvm_names: "{{ jvm_names | default([]) + [item[1]] }}"
+    with_items:
+      - "{{ myvalue }}"
+  
+  - name: Find and Set Var for uid for find other Solutions
+    set_fact:
+      uid: "{{ uid | d([]) + [item | regex_search('^[a-z]+')]}}"
+    loop : "{{ java_processes.stdout_lines[1:]}}"
+    loop_control:
+      label: "Parshing lines..."
+    when: item | regex_search('^[a-z]+') != 'wasadm'
+    register: finduid
+
+  - name: set unique values
+    set_fact:
+      uid: "{{ uid | unique }}"
+      jvm_names: "{{ jvm_names | union(uid) }}"
+    when: finduid is not skipped
+
+  - name: Convert jvm name list date to dictionary date
+    set_fact:
+      dict: "{ '{{ansible_hostname}}' : {{jvm_names}} }"
+  
+  - shell: date +%m%d%H%M
+    register: timestamp
+    delegate_to: localhost
+    run_once: true
+
+  - name: Save all hosts dictionary data to file
+    lineinfile:
+      path: ./server_output/jvmname.{{ timestamp.stdout }}.txt
+      line: "{{ dict }}"
+      create: yes
+    delegate_to: localhost
+    

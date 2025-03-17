@@ -15,6 +15,6 @@
         cmd: cat /etc/passwd | grep -w "{{ account_name }}"
       register: shell_result
 
-    - nema: debug
+    - name: debug
       debug:
         msg: "{{shell_result.stdout}}"

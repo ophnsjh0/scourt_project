@@ -1,0 +1,11 @@
+# sycros(서버모니터링) agent 기동
+---
+- name: start sycros
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: swsycros agent start
+      ansible.builtin.shell:
+        cmd: su - swsycros -c '/product/sycros/agent.sh'

@@ -1,0 +1,31 @@
+---
+- hosts: "{{target}}"
+  gather_facts: yes
+  become: no
+
+  tasks:
+    - name: Gather facts on listening ports
+      community.general.listen_ports_facts:
+
+    - name: List all Ports
+      set_fact:
+        data_line: "{{ ansible_hostname }} : {{ ansible_facts.tcp_listen | map(attribute='port') | unique | sort | list}}"
+
+    - name: Print ListenPort
+      debug:
+        msg: "{{ data_line }}"
+
+    - name: export File
+      lineinfile:
+        path: /APP/ansible/listenPort.txt
+        line: "{{ data_line }}"
+        state: present
+        create: yes
+        insertafter: EOF
+      delegate_to: localhost
+      register: check
+      retries: 1 
+      until: check is not changed
+      ignore_errors: yes
+
+      

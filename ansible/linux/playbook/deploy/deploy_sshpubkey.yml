@@ -1,0 +1,23 @@
+#ansible 계정 sshpubkey 배포  
+---
+- name: copy ssh key
+  hosts: "{{ target }}"
+  become: yes
+  become_user: swansible
+  gather_facts: no
+
+  tasks:
+  - name: make directory
+    file:
+      path: "/home/ansible/.ssh"
+      state: directory
+
+  - name: create empty file
+    file:
+      path: "/home/ansible/.ssh/suthorized_keys"
+      state: touch
+  
+  - name: put pubkey
+    lineinfile:
+      path: "/home/swansible/.ssh/authorized_keys"
+      line : "ssh-ed25519 AAAAABBBBBCCCCDDDDDDEEEEEAAAAVCVVV ansible"

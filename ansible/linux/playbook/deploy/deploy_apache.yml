@@ -1,0 +1,48 @@
+#Apache 배포  
+---
+- name: Install Apache
+  hosts: "{{ target }}"
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  vars:
+    - node_exporter_dir : /home/ansible/apache2459.tar
+
+  tasks:
+    - name: copy file to remote
+      copy:
+        src: /home/ansible/apache2459.tar
+        dest: /product/apache2459.tar
+        force: no
+      register: result
+    
+    - name: Extract a file
+      unarchive:
+        src: /product/apache2459.tar
+        dest: /product
+        remote_src: yes
+      when: result is changed
+      register: unzip
+    
+    # - name: chmod apache dir 
+    #   command: chmod -R webadm:app apache2459
+    #   when: unzip is changed
+
+    - name: delete tar file
+      file:
+        path: /product/apache2459.tar
+        state: absent
+      when: unzip is changed
+
+    - name: copy file to remote
+      copy:
+        src: /APP/ansible/apache-2.4.59_openssl-3.0.13.conf
+        dest: /etc/ld.so.conf.d
+        force: no 
+      register: copy_conf
+
+    - name: display copy task
+      debug:
+        msg: "conf file copied !"
+      when: copy_conf is changed

@@ -1,0 +1,44 @@
+# Window Solidstep 점검 후 점검결과 Fetch
+---
+- name: Run Solidstep Script on Window Server
+  hosts: "{{ target }}"
+  gather_facts: no
+
+  tasks:
+    - name: Copy file
+      win_copy:
+        src: /home/ansible/util/win_util/manual_windows.zip
+        dest: c:\ansible
+        remote_src: no
+      register: copy 
+
+    - name: Create Directory
+      win_file:
+        path: c:\ansible\manual_windows
+        state: directory
+      register: mkdir
+
+    - mame: unzip zip solidstep script
+      win_shell: "Expand-Archive d:\\ansible\\manual_window.zip -DestinationPath d:\\ansible\\manual_windows"
+      when: mkdir is changed
+      register: unzip
+
+    - name: run solidstep 
+      win_command:
+        cmd: d:\ansible\manual_windows\SS_AS-x64.exe
+      register: ss_run
+      
+    - name: find result file
+      win_find: paths="d:\\New_Solid_Step_windows" recurse=no patterns="0_SERVER*.enc"
+      register: files_to_copy
+      tags: files_to_copy
+
+    - name: Fetch File from remote
+      fetch:
+        src: "{{ item.path }}"
+        dest: /tmp/solidstep/win/
+        # validate_checksum: false
+        flat: yes
+      with_items: "{{ file_to_copy.files }}"
+      tags: files_to_copy
+      when: files_to_copy.matched != 0

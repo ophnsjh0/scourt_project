@@ -1,0 +1,33 @@
+# sycros 관련 폴더&계정 권한변경
+---
+- name: modify dir sycros 
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: sycros agent stop
+      ansible.builtin.shell:
+        cmd: /product/sycros/agent.sh stop
+      register: result
+    
+    - name: usermod -u
+      ansible.builtin.shell:
+        cmd: usermod -u 6002 swsycros
+      when: result is changed
+
+    - name: usermod -g
+      ansible.builtin.shell:
+        cmd: usermod -g 6000 swcycros
+    
+    - name: product/sycros chown
+      ansible.builtin.shell:
+        cmd: chown -R swsycros:mo /product/sycros
+    
+    - name: product/sycros/bin/scsystem shown
+      ansible.builtin.shell:
+        cmd: chown root:mo /product/sycros/bin/scsystem
+
+    - name: product/sycros/bin/scsystem 4755
+      ansible.builtin.shell:
+        cmd: chmod 4755 /product/sycros/bin/scsystem

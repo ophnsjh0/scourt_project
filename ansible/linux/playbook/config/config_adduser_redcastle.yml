@@ -1,0 +1,29 @@
+# redcastle(서버보안도구) 계정 배포
+---
+- name: add redcastle user
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: yes
+
+  tasks:
+  - name: Add secu group
+    group:
+      name: secu
+      state: present
+      gid: 5000
+  
+  - name: Add user redcastle
+    user:
+      name: redcastle
+      shell: /bin/bash
+      state: present
+      create_home: true
+      home: /home/redcastle/
+      uid: 5102
+      group: secu
+      groups: wheel
+  
+  - name: Create a password for user
+    user:
+      name: redcastle
+      password: "{{ '1234qwer' | password_hash('sha512') }}"

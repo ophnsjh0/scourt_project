@@ -1,0 +1,25 @@
+# 사용자 계정 배포 및 password 변경
+---
+- name: add user
+  hosts: "{{ target }}"
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: create user
+      user:
+        name: hongildong
+        shell: /bin/bash
+        uid: 4104
+        group: 4000
+        state: present
+        create_home: true
+        home: /home/hongildong
+      register: create_user
+
+
+    - name: user password change
+      user:
+        name: hongildong
+        password: "{{ '1234qwer' | password_hash('sha512') }}"
+      when: create_user is changed

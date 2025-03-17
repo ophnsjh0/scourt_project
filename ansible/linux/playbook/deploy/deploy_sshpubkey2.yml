@@ -1,0 +1,21 @@
+---
+- hosts: all
+
+  vars:
+    - pubkey : ssh-ed25519 AAAAABBBBBCCCCDDDDDDEEEEEAAAAVCVVV ansible
+
+  tasks:
+  - name: make directory
+    file:
+      path: "/home/ansible/.ssh"
+      state: directory
+
+  - name: create empty file
+    file:
+      path: "/home/ansible/.ssh/suthorized_keys"
+      state: touch
+  
+  - name: put pubkey
+    lineinfile:
+      path: "/home/swansible/.ssh/authorized_keys"
+      line : {{ pubkey}}

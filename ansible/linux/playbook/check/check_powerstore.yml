@@ -1,0 +1,21 @@
+---
+- name: List Filesystems Which are unused
+  hosts: localhost
+  connection: local
+  vars:
+    array_ip: '10.10.10.10'
+    validate_certs: false
+    user: 'admin'
+    password: '1234qwer'
+
+  tasks:
+    - name: Get Filesystem 
+      dellemc.powerstore.info:
+        array_ip: "{{ array_ip }}"
+        validate_certs: "{{ validate_certs }}"
+        user: "{{ user }}"
+        password: "{{ password }}"
+        gather_subset:
+          - file_system
+        all_pages: true
+      register: all_filesystem 
