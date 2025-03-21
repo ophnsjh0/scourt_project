@@ -1,0 +1,9 @@
+---
+- name: test-valut
+  hosts: localhost
+
+  tasks:
+    - name: copy the encrypted file to show how vault works
+      template:
+        src: credential.txt
+        dest: /home/ophnsjh0/code/scourt_project/ansible/study/vault/tmp/credntial.txt
